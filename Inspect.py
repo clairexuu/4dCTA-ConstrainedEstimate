@@ -80,6 +80,11 @@ def extract_surface_mesh(
             print(f"❌ Failed to process {nii_path}: {e}")
         return False
 
+for pct in range(0, 100, 5):
+    nii_path = f"nnunet_outputs_pp2/{pct}pct.nii.gz"
+    output_stl_path = f"meshesCleaned/{pct}pct.stl"
+    extract_surface_mesh(nii_path, output_stl_path)
+
 # for pct in range(0, 100, 5):
 #     nii_path = f"nnunet_outputs_pp2/{pct}pct.nii.gz"
 #     output_stl_path = f"pipeline_outputs/surface_meshes2/{pct}pct.stl"
@@ -93,7 +98,7 @@ def extract_surface_mesh(
 #
 #     extract_surface_mesh(nii_path, output_stl_path)
 
-extract_surface_mesh("nnunet_outputs_pp2/65pct_filled.nii.gz", "pipeline_outputs/surface_meshes2/65pct_filled.stl")
+# extract_surface_mesh("nnunet_outputs_pp2/65pct_filled.nii.gz", "pipeline_outputs/surface_meshes2/65pct_filled.stl")
 
 def fix_non_genus0_mesh(mesh: trimesh.Trimesh, verbose=True) -> trimesh.Trimesh:
     """
