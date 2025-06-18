@@ -1,10 +1,8 @@
 import numpy as np
 from scipy.sparse import coo_matrix
 from scipy.sparse import lil_matrix
-from scipy.sparse.linalg import spsolve, inv
+from scipy.sparse.linalg import inv
 import os
-import trimesh
-from scipy.sparse import save_npz
 from scipy.sparse import identity
 from sklearn.neighbors import NearestNeighbors
 
@@ -85,7 +83,7 @@ def build_surface_stiffness_matrix(vertices, faces, E=1.4e6, nu=0.47):
 
 
 
-def select_sparse_samples(displacement, n=300):
+def select_sparse_samples(displacement, n=600):
     """
     Randomly sample n vertices and build observation vector and H matrix.
 
@@ -153,71 +151,71 @@ def constrained_estimation_solver(K, H, y, max_iter=10, tol=1e-6):
 
 def main():
     # Setup
-    # pointcloud_dir = "2ndRound/pointclouds"
-    # disp_dir = "2ndRound/cpd_results"
-    # output_dir = "2ndRound/ce_results"
-    # os.makedirs(output_dir, exist_ok=True)
-    #
-    # n_points = 1500  # Must match CPD input
-    # N = n_points
-    #
-    # # Load Phase 0 point cloud
-    # points_0 = np.load(os.path.join(pointcloud_dir, "points_0.npy"))
-    #
-    # print("[STEP] Building stiffness matrix from KNN graph...")
-    # K = build_knn_stiffness_matrix(points_0, k=10, E=1.4e6)
-    #
-    # # Loop over phases
-    # for i in range(20):
-    #     phase = i * 5
-    #     disp_path = os.path.join(disp_dir, f"disp_{phase}.npy")
-    #
-    #     if not os.path.exists(disp_path):
-    #         print(f"[!] Missing: {disp_path}")
-    #         continue
-    #
-    #     disp = np.load(disp_path)
-    #     if disp.shape != (N, 3):
-    #         print(f"[!] Shape mismatch in {disp_path}, expected {(N,3)}, got {disp.shape}")
-    #         continue
-    #
-    #     print(f"\n[Phase {phase}] Sampling points...")
-    #     H, y, indices = select_sparse_samples(disp, n=300)
-    #
-    #     print(f"[Phase {phase}] Running estimation...")
-    #     U_est = constrained_estimation_solver(K, H, y)
-    #
-    #     U_est_xyz = U_est.reshape(N, 3)
-    #     out_path = os.path.join(output_dir, f"estimated_disp_{phase}.npy")
-    #     np.save(out_path, U_est_xyz)
-    #     print(f"[✓] Saved: {out_path}")
+    pointcloud_dir = "5000CPD/point_clouds"
+    disp_dir = "5000CPD/cpd_results"
+    output_dir = "5000CPD/ce_results"
+    os.makedirs(output_dir, exist_ok=True)
+
+    n_points = 5000  # Must match CPD input
+    N = n_points
+
+    # Load Phase 0 point cloud
+    points_0 = np.load(os.path.join(pointcloud_dir, "points_0.npy"))
+
+    print("[STEP] Building stiffness matrix from KNN graph...")
+    K = build_knn_stiffness_matrix(points_0, k=10, E=1.4e6)
+
+    # Loop over phases
+    for i in range(20):
+        phase = i * 5
+        disp_path = os.path.join(disp_dir, f"disp_{phase}.npy")
+
+        if not os.path.exists(disp_path):
+            print(f"[!] Missing: {disp_path}")
+            continue
+
+        disp = np.load(disp_path)
+        if disp.shape != (N, 3):
+            print(f"[!] Shape mismatch in {disp_path}, expected {(N,3)}, got {disp.shape}")
+            continue
+
+        print(f"\n[Phase {phase}] Sampling points...")
+        H, y, indices = select_sparse_samples(disp, n=600)
+
+        print(f"[Phase {phase}] Running estimation...")
+        U_est = constrained_estimation_solver(K, H, y)
+
+        U_est_xyz = U_est.reshape(N, 3)
+        out_path = os.path.join(output_dir, f"estimated_disp_{phase}.npy")
+        np.save(out_path, U_est_xyz)
+        print(f"[✓] Saved: {out_path}")
 
     # Compare with CPD ----------------------------------------------------
 
-    cpd_dir = "2ndRound/cpd_results"
-    est_dir = "2ndRound/ce_results"
-    phases = range(0, 100, 5)
-
-    print(f"{'Phase':>6} | {'MSE':>10} | {'RMSE':>10} | {'MAE':>10}")
-    print("-" * 45)
-
-    for phase in phases:
-        try:
-            cpd_disp = np.load(os.path.join(cpd_dir, f"disp_{phase}.npy"))  # (N, 3)
-            est_disp = np.load(os.path.join(est_dir, f"estimated_disp_{phase}.npy"))  # (N, 3)
-
-            if cpd_disp.shape != est_disp.shape:
-                raise ValueError("Shape mismatch")
-
-            diff = cpd_disp - est_disp
-            mse = np.mean(diff ** 2)
-            rmse = np.sqrt(mse)
-            mae = np.mean(np.abs(diff))
-
-            print(f"{phase:6} | {mse:10.6f} | {rmse:10.6f} | {mae:10.6f}")
-
-        except Exception as e:
-            print(f"{phase:6} | ERROR: {str(e)}")
+    # cpd_dir = "2ndRound/cpd_results"
+    # est_dir = "2ndRound/ce_results"
+    # phases = range(0, 100, 5)
+    #
+    # print(f"{'Phase':>6} | {'MSE':>10} | {'RMSE':>10} | {'MAE':>10}")
+    # print("-" * 45)
+    #
+    # for phase in phases:
+    #     try:
+    #         cpd_disp = np.load(os.path.join(cpd_dir, f"disp_{phase}.npy"))  # (N, 3)
+    #         est_disp = np.load(os.path.join(est_dir, f"estimated_disp_{phase}.npy"))  # (N, 3)
+    #
+    #         if cpd_disp.shape != est_disp.shape:
+    #             raise ValueError("Shape mismatch")
+    #
+    #         diff = cpd_disp - est_disp
+    #         mse = np.mean(diff ** 2)
+    #         rmse = np.sqrt(mse)
+    #         mae = np.mean(np.abs(diff))
+    #
+    #         print(f"{phase:6} | {mse:10.6f} | {rmse:10.6f} | {mae:10.6f}")
+    #
+    #     except Exception as e:
+    #         print(f"{phase:6} | ERROR: {str(e)}")
 
 
 if __name__ == "__main__":
