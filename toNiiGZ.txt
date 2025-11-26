@@ -1,0 +1,42 @@
+Extract stacked series of 20 frames 4dCTA in 3D Slicer python console
+
+--------------------------------------------------------------------------------------------------
+
+Step 1: Export Sequence Frames to Independent Volume Nodes
+
+import slicer, os
+
+# Get the sequence node
+sequenceNode = slicer.util.getNode('10: Unnamed Series')
+
+# Create and configure a new SequenceBrowser node for export
+exportBrowserNode = slicer.mrmlScene.AddNewNodeByClass("vtkMRMLSequenceBrowserNode")
+exportBrowserNode.SetName("ExportBrowserNode")
+exportBrowserNodeAddID = exportBrowserNode.AddSynchronizedSequenceNode(sequenceNode)
+
+# Convert to regular volume nodes
+exportedVolumes = []
+for i in range(sequenceNode.GetNumberOfDataNodes()):
+    exportBrowserNode.SetSelectedItemNumber(i)
+    slicer.app.processEvents()  # ensure GUI updates
+    proxyVolume = exportBrowserNode.GetProxyNode(sequenceNode)
+    exportedVolumes.append(slicer.mrmlScene.CopyNode(proxyVolume))
+
+--------------------------------------------------------------------------------------------------
+
+Step 2: Save the Exported Volumes to NIfTI
+
+# Set your output path
+output_folder = "/Users/clairexu/Desktop/UW/MedImage/4dCTA/4097359_17_aneurysm/phases"
+os.makedirs(output_folder, exist_ok=True)
+
+# Save each volume
+for i, vol in enumerate(exportedVolumes):
+    pct = i * 5
+    vol.SetName(f"{pct}pct")  # just to be safe
+    filename = os.path.join(output_folder, f"{pct}pct.nii.gz")
+    success = slicer.util.saveNode(vol, filename)
+    if success:
+        print(f"✅ Saved: {filename}")
+    else:
+        print(f"❌ Failed: {filename}")

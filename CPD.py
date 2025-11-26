@@ -46,9 +46,9 @@ def run_cpd_on_raw_phase0(ref_path, mesh_dir, output_dir, beta=1.0, lamb=3.0):
         print(f"[✓] Phase {phase}: CPD completed and mesh saved.")
 
 def main():
-    ref_path = "CPDCEoutput/meshesCleaned/0pct.stl"
-    mesh_dir = "CPDCEoutput/meshesCleaned"
-    output_dir = "CPDCEoutput/cpd_output"
+    ref_path = "4097359_17_vessel/CPDCEoutput/meshesCleaned/0pct.stl"
+    mesh_dir = "4097359_17_vessel/CPDCEoutput/meshesCleaned"
+    output_dir = "4097359_17_vessel/CPDCEoutput/cpd_output"
     run_cpd_on_raw_phase0(ref_path, mesh_dir, output_dir)
 
 if __name__ == "__main__":

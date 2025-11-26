@@ -35,6 +35,7 @@ def convert_npy_to_mat(npy_dir, out_dir):
 # input_dir = "CPDCEoutput/ce500_output"
 # output_dir = "matlab_visualizations/ce"
 # convert_npy_to_mat(input_dir, output_dir)
+# os.makedirs(output_dir, exist_ok=True)
 
 for phase in range(0, 100, 5):
     mesh_path = f"CPDCEoutput/meshesCleaned/{phase}pct.stl"

@@ -68,7 +68,8 @@ def compute_metrics(gt, pred):
     rmse = np.sqrt(mse)
     return mse, mae, rmse
 
-metrics_csv = os.path.join(output_dir, "cpd_volume_error_metrics.csv")
+metrics_csv = os.path.join(output_dir, "cpd_params_vol_error_metrics.csv")
+os.makedirs(metrics_csv, exist_ok=True)
 with open(metrics_csv, "w", newline="") as f:
     writer = csv.writer(f)
     writer.writerow(["Beta", "Lambda", "MSE", "MAE", "RMSE"])

@@ -49,8 +49,8 @@ def evaluate_constrained_estimation_vs_cpd(
         return (n_sparse, np.nan, np.nan, np.nan)
 
 def main():
-    cpd_dir = "CPDCEoutput/cpd_output"
-    sparse_points_list = [10, 50, 100, 200, 300, 400, 500, 600]
+    cpd_dir = "4097359_17_aneurysm/CPDCEoutput/cpd_output"
+    sparse_points_list = [500]
 
     results = [("N_sprs", "Mean Square Error", "Mean Absolute Error", "Root Mean Square Deviation")]
 
@@ -58,7 +58,7 @@ def main():
     def est_disp_name(phase, n): return f"estimated_disp_{phase}.npy"
 
     for n_sparse in sparse_points_list:
-        ce_dir = f"CPDCEoutput/ce{n_sparse}_output"
+        ce_dir = f"4097359_17_aneurysm/CPDCEoutput/ce{n_sparse}_output"
         result = evaluate_constrained_estimation_vs_cpd(
             cpd_dir,
             ce_dir,
@@ -69,10 +69,10 @@ def main():
         results.append(result)
 
     # === Save to CSV ===
-    with open("CPDCEoutput/ce_vs_cpd_error_metrics.csv", "w", newline="") as f:
+    with open("4097359_17_aneurysm/CPDCEoutput/ce_vs_cpd_disp_error_metrics.csv", "w", newline="") as f:
         writer = csv.writer(f)
         writer.writerows(results)
-    print("[✓] Saved metrics to ce_vs_cpd_error_metrics.csv")
+    print("[✓] Saved metrics to ce_vs_cpd_disp_error_metrics.csv")
 
 if __name__ == "__main__":
     main()

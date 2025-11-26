@@ -11,15 +11,17 @@ def estimate_volume_from_mesh(path):
 
 
 phases = list(range(0, 100, 5))
-mesh_dir = "CPDCEoutput/meshesCleaned"
-cpd_dir = "CPDCEoutput/cpd_output"
-ce_dir = "CPDCEoutput/ce500_output"
+mesh_dir = "4007775_aneurysm/CPDCEoutput/meshesCleaned2"
+# mesh_dir = "volume/4007775_aneurysm"
+cpd_dir = "4007775_aneurysm/CPDCEoutput/cpd_output"
+ce_dir = "4007775_aneurysm/CPDCEoutput/ce500_output"
 
 
 vol_stl, vol_cpd, vol_ce = [], [], []
 
 
 ref_mesh = trimesh.load_mesh(os.path.join(mesh_dir, "0pct.stl"))
+# ref_mesh = trimesh.load_mesh(os.path.join(mesh_dir, "temp_phase_0.stl"))
 ref_vertices = ref_mesh.vertices
 ref_faces = ref_mesh.faces
 print(f"[✓] Loaded Phase 0 reference mesh: {ref_vertices.shape[0]} vertices, {ref_faces.shape[0]} faces")
@@ -27,6 +29,7 @@ print(f"[✓] Loaded Phase 0 reference mesh: {ref_vertices.shape[0]} vertices, {
 
 for phase in phases:
     # STL volume
+    i = int(phase/5)
     stl_path = os.path.join(mesh_dir, f"{phase}pct.stl")
     vol_stl.append(estimate_volume_from_mesh(stl_path))
 

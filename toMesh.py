@@ -45,9 +45,14 @@ def extract_surface_mesh(nii_path, output_stl_path, threshold = 0.5, closing_ite
         mesh.export(output_stl_path)
 
         print(f"Saved mesh to {output_stl_path}")
-        print(f"   Watertight: {mesh.is_watertight}, Euler: {mesh.euler_number}, Volume: {mesh.volume:.2f}, Faces: {len(mesh.faces)}")
+        print(f"   Watertight: {mesh.is_watertight}, Euler: {mesh.euler_number}, Volume: {mesh.volume:.2f}, Faces: {len(mesh.faces)}, Vertices: {len(mesh.vertices)}")
         return True
 
     except Exception as e:
         print(f"Failed to process {nii_path}: {e}")
         return False
+
+for phase in range(0, 100, 5):
+    nii_path = f"4007775_aneurysm/nnunet_outputs_pp/{phase}pct.nii.gz"
+    output_stl_path = f"4007775_aneurysm/CPDCEoutput/meshesCleaned2/{phase}pct.stl"
+    extract_surface_mesh(nii_path, output_stl_path, threshold=0.5, closing_iterations=2, preview=False)

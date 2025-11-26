@@ -1,0 +1,35 @@
+# macOS
+.DS_Store
+
+# IDE
+.idea/
+
+# Patient data directories
+0596010_aneurysm/
+0596010_vessel/
+4007775_aneurysm/
+4007775_vessel/
+4007775_vessel2/
+4007775_vessel3/
+4097359_16_aneurysm/
+4097359_17_aneurysm/
+4097359_17_vessel/
+4097359_17_vessel2/
+4100844 PCCT 4D-CTA/
+
+# Third-party libraries
+npy-matlab-master/
+
+# Temporary files
+temp.py
+*.pyc
+__pycache__/
+
+# MATLAB files
+*.asv
+
+# Output/Processing directories
+volume/
+
+# Visualization files
+visualize_disp.mlx

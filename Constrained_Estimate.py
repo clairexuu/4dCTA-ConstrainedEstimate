@@ -107,13 +107,20 @@ def constrained_estimate(ref_mesh_path, disp_dir, output_dir, sparse_n, phases=r
         print(f"[✓] Saved CE mesh: {out_mesh_path}")
 
 def main():
-    for n_sparse in [10, 50, 100, 200, 300, 400, 500, 600]:
-        constrained_estimate(
-            ref_mesh_path="CPDCEoutput/meshesCleaned/0pct.stl",
-            disp_dir="CPDCEoutput/cpd_output",
-            output_dir=f"CPDCEoutput/ce{n_sparse}_output",
-            sparse_n = n_sparse
-        )
+    # for n_sparse in [10, 50, 100, 200, 300, 400, 500, 600]:
+    #     constrained_estimate(
+    #         ref_mesh_path="CPDCEoutput/meshesCleaned/0pct.stl",
+    #         disp_dir="CPDCEoutput/cpd_output",
+    #         output_dir=f"CPDCEoutput/ce{n_sparse}_output",
+    #         sparse_n = n_sparse
+    #     )
+
+    constrained_estimate(
+        ref_mesh_path="4097359_17_vessel/CPDCEoutput/meshesCleaned/0pct.stl",
+        disp_dir="4097359_17_vessel/CPDCEoutput/cpd_output",
+        output_dir=f"4097359_17_vessel/CPDCEoutput/ce500_output",
+        sparse_n=500
+    )
 
 if __name__ == "__main__":
     main()
